@@ -15,10 +15,11 @@
 	// Functions
 	
 	babushka.pack = function(object){
-		// Each doll is enclosed in a div
-		var doll = document.createElement("div");
 		
 		function iter(obj,parent){
+			if(parent === null){
+				parent = document.createElement("div");
+			}
 			// Itterate over object
 			for(var prop in obj){
 				// Only check if property exists
@@ -35,21 +36,26 @@
 							ele.appendChild(document.createTextNode(obj[prop]));
 							break;
 						case "number":
+							ele.appendChild(document.createTextNode(obj[prop]));
 							break;
 						case "symbol":
+							ele.appendChild(document.createTextNode(obj[prop]));
 							break;
 						case null:
+							ele.appendChild(document.createTextNode(obj[prop]));
+							break;
 						default:
 							ele.appendChild(obj[prop]);	
 							break;
 					}
+					console.log("Parent: "+typeof(parent)+" Element: "+typeof(ele));
 					parent.appendChild(ele);
 				}
 			}
 			return parent;
 		}
 		
-		babushka.dolls.push(iter(object,doll));
+		babushka.dolls.push(iter(object,null));
 	};
 	
 	babushka.unpack = function(){
