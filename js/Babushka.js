@@ -3,67 +3,95 @@
 	var version = "0.0.1";
 	
 	babushka.version = function(){
-		console.log("Matryoshka v"+version);
+		console.log("Babushka v"+version);
 		return version;
 	};
 	
 	// Public vars
-	babushka.dolls = [];
+	babushka.dolls = {};
 	
 	// Private vars
 	
 	// Functions
 	
-	babushka.pack = function(object){
+	babushka.pack = function(name,object){
 		
 		function iter(obj,parent){
-			if(parent === null){
-				parent = document.createElement("div");
-			}
 			// Itterate over object
 			for(var prop in obj){
 				// Only check if property exists
 				if(obj.hasOwnProperty(prop)){
-					// Turn the property into an element
-					var ele = document.createElement(prop);
+					// check if id or class and ignore
 					// Direct the value of the property to the appropriate response
 					switch(typeof(obj[prop])){
 						case "object":
-							// Continue itteration over nested objects
-							ele.appendChild(iter(obj[prop],prop));
+							parent.appendChild(iter(obj[prop],document.createElement(prop)));
 							break;
 						case "string":
-							ele.appendChild(document.createTextNode(obj[prop]));
+							switch(prop){
+								case "id":
+									parent.setAttribute("id",obj.id);
+									break;
+								case "class":
+									parent.setAttribute("class",obj.class);
+									break;
+								case "content":
+									parent.appendChild(document.createTextNode(obj[prop]));
+									break;
+								case "src":
+									parent.setAttribute("src",obj.src);
+									break;
+								case "width":
+									parent.setAttribute("width",obj.width);
+									break;
+								case "height":
+									parent.setAttribute("height",obj.height);
+									break;
+								default:
+									var ele = document.createElement(prop);
+									ele.appendChild(document.createTextNode(obj[prop]));
+									parent.appendChild(ele);
+									break;
+							}
 							break;
 						case "number":
-							ele.appendChild(document.createTextNode(obj[prop]));
+							parent.appendChild(document.createTextNode(obj[prop]));
 							break;
 						case "symbol":
-							ele.appendChild(document.createTextNode(obj[prop]));
+							parent.appendChild(document.createTextNode(obj[prop]));
 							break;
 						case null:
-							ele.appendChild(document.createTextNode(obj[prop]));
 							break;
 						default:
-							ele.appendChild(obj[prop]);	
 							break;
 					}
-					console.log("Parent: "+typeof(parent)+" Element: "+typeof(ele));
-					parent.appendChild(ele);
 				}
 			}
 			return parent;
 		}
-		
-		babushka.dolls.push(iter(object,null));
+		parent = document.createElement("div");
+		babushka.dolls[name] = iter(object,parent);
 	};
 	
-	babushka.unpack = function(){
+	babushka.unpack2 = function(output){
 		var dollData = "";
-		for(var doll in mjs.dolls){
-			dollData += doll;
+		for(var doll in babushka.dolls){
+			console.log(babushka.dolls[doll]);
+			dollData += babushka.dolls[doll].innerHTML;
 		}
-		return dollData;
+		console.log(dollData);
+		//return dollData;
 	};
+	
+	babushka.unpack = function(name,output){
+		console.log(babushka.dolls[name]);
+		var out = document.getElementById(output);
+		console.log(typeof(document.getElementById(output)));
+		out.appendChild(babushka.dolls[name]);
+	};
+	
+	babushka.nest = function(){
+		
+	}
 
 }(window.babushka = window.babushka || {}));

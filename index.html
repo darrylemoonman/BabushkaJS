@@ -7,23 +7,36 @@
 </head>
 
 <body>
-
-<h1>Welcome to Babushka</h1>
+<div id="output"></div>
 <script>
 babushka.version();
 
 var gameDoll = {
-	div:{
-		h1:"This is a Doll",
+		h1:{
+			id:"h11",
+			content:"Welcome to Babushka"
+		},
 		div:{
+			id:"div1",
 			span:"It is nestable"
+		},
+		div:{
+			id:"M8",
+			div:{
+				h1:"Another Title",
+				img:{
+					src:"img/stock-photo-144413331.jpg",
+					width:"200px",
+					height:"200px"
+				}
+			}
 		}
-	}
 };
 
-babushka.pack(gameDoll);
+babushka.pack("Test",gameDoll);
 
+babushka.unpack("Test","output");
 </script>
-<div></div>
+
 </body>
 </html>
